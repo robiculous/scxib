@@ -8,7 +8,7 @@ as a design tool for SproutCore applications.
 
 ## How to use SCXIB
 
-### On-the-fly Application loading
+### On-the-fly Application Loading
 
 Transform XIB files for your SproutCore application to load and use during development:
 
@@ -24,7 +24,7 @@ Transform XIB files for your SproutCore application to load and use during devel
 
 Transform a XIB file into a JavaScript file for your SproutCore application
 using a command line tool:
-    `./bin/scxib -namespace DemoApp -page mainPage apps/demo_app/resources/MainPage.xib`
+    ./bin/scxib -namespace DemoApp -page mainPage apps/demo_app/resources/MainPage.xib
 
 ## Requirements
 
