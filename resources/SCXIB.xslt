@@ -25,6 +25,11 @@
                      <xsl:with-param name="panelNode" select="*[@key='IBDocument.RootObjects']/object[@class='NSWindowTemplate']"/>
                  </xsl:call-template>
             </xsl:when>
+            <xsl:when test="*[@key='IBDocument.RootObjects']/object[@class='NSCustomView']">
+                <xsl:call-template name="FromCustomView">
+                     <xsl:with-param name="windowNode" select="*[@key='IBDocument.RootObjects']/object[@class='NSCustomView']"/>
+                 </xsl:call-template>
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:call-template name="FromCustomView">
                      <xsl:with-param name="windowNode" select="*[@key='IBDocument.RootObjects']/object[@class='NSView']"/>
@@ -445,12 +450,22 @@
             <xsl:with-param name="nodes" select="$windowNode/*[@key='NSSubviews']/object" />
         </xsl:call-template>
         <xsl:value-of select="$namespace"/>.<xsl:value-of select="$pageName"/> = SC.View.design({
-            layout: {top:0, left:0, right:0, bottom:0},
-            childViews:[
-            <xsl:call-template name="ProcessNodes">
-                <xsl:with-param name="nodes" select="$windowNode/*[@key='NSSubviews']/object" />
+        <xsl:call-template name="LayoutFromFrame">
+                <xsl:with-param name="node" select="$windowNode"/>
+                <xsl:with-param name="parentNodeRefId" select="$windowNode/reference[@key='NSSuperview']/@ref"/>
             </xsl:call-template>
-            ]
+            <xsl:call-template name="KeyValuePropertiesForObject">
+                <xsl:with-param name="objectId" select="$windowNode/@id"/>
+            </xsl:call-template>
+            <xsl:if test="count($windowNode/*[@key='NSSubviews']/object) &gt; 0">
+                childViews:[
+                <xsl:for-each select="$windowNode/*[@key='NSSubviews']/object">
+                    <xsl:call-template name="ProcessNodes">
+                        <xsl:with-param name="nodes" select="."/>
+                    </xsl:call-template>
+                </xsl:for-each>
+                ]
+            </xsl:if>
         });
     </xsl:template>
 
