@@ -583,7 +583,7 @@
                 </xsl:choose>,
             dividerThickness:
                 <xsl:choose>
-                    <xsl:when test="$node/bool[@key='NSDividerStyle'] = 3">
+                    <xsl:when test="$node/int[@key='NSDividerStyle'] = 2">
                         1
                     </xsl:when>
                     <xsl:otherwise>
