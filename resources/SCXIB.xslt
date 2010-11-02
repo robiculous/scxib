@@ -159,12 +159,6 @@
                         <xsl:when test="./string[@key='keyPath']='recordType'">
                             <xsl:value-of select="./string[@key='value']" />
                         </xsl:when>
-                        <!-- when setting individual controls to content, it
-                        needs to be without quotes. I wonder is this applies
-                        generally -->
-                        <xsl:when test="./string[@key='keyPath']='content'">
-                            <xsl:value-of select="./string[@key='value']" />
-                        </xsl:when>
                         <xsl:otherwise>
                             "<xsl:value-of select="./string[@key='value']" />"
                         </xsl:otherwise>
@@ -174,7 +168,7 @@
 		</xsl:for-each>
     </xsl:template>
     
-    <xsl:template name="kvValueForKey">
+    <xsl:template name="ValueForKeyOfNode">
         <xsl:param name="objectId" />
         <xsl:param name="key" />
         <xsl:for-each select="//object[@key='IBDocument.Objects']/*[@key='flattenedProperties']/*/*[@class='IBUserDefinedRuntimeAttributesPlaceholder']">
@@ -532,7 +526,6 @@
                 }),
             </xsl:otherwise>
         </xsl:choose>
-
     </xsl:template>
 
     <xsl:template name="NSTextField">
@@ -574,16 +567,16 @@
             </xsl:call-template>
             layoutDirection:
                 <xsl:choose>
-                    <xsl:when test="$node/bool[@key='NSIsVertical'] = YES">
-                        SC.LAYOUT_VERTICAL
+                    <xsl:when test="$node/bool[@key='NSIsVertical']">
+                        SC.LAYOUT_HORIZONTAL
                     </xsl:when>
                     <xsl:otherwise>
-                        SC.LAYOUT_HORIZONTAL
+                        SC.LAYOUT_VERTICAL
                     </xsl:otherwise>
                 </xsl:choose>,
             dividerThickness:
                 <xsl:choose>
-                    <xsl:when test="$node/bool[@key='NSDividerStyle'] = 3">
+                    <xsl:when test="$node/int[@key='NSDividerStyle'] = 2">
                         1
                     </xsl:when>
                     <xsl:otherwise>
@@ -609,13 +602,13 @@
                 <xsl:with-param name="node" select="$node"/>
                 <xsl:with-param name="parentNodeRefId" select="$node/reference[@key='NSSuperview']/@ref"/>
             </xsl:call-template>
-            <xsl:variable name="url">
-                <xsl:call-template name="kvValueForKey">
-                    <xsl:with-param name="objectId" select="$node/@id"/>
+            <xsl:variable name="fileName">
+                <xsl:call-template name="ValueForKeyOfNode">
                     <xsl:with-param name="key" select="'value'"/>
+                    <xsl:with-param name="objectId" select="$node/@id"/>
                 </xsl:call-template>
             </xsl:variable>
-            value:"<xsl:value-of select="$resourcesPath"/>images/<xsl:value-of select="normalize-space($url)"/>"
+            value:"<xsl:value-of select="$resourcesPath"/>images/<xsl:value-of select="normalize-space($fileName)"/>"
         }),
     </xsl:template>
 
